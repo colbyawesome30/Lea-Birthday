@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday, Lea!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff9acb, #ffc2e2);
+      font-family: 'Quicksand', sans-serif;
+      text-align: center;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3.5em;
+      margin: 0;
+    }
+
+    .birthday-label {
+      font-family: 'Pacifico', cursive;
+      font-size: 3.5em;
+      margin-top: 10px;
+    }
+
+    #countdown {
+      font-size: 5em;
+      font-weight: bold;
+      margin: 30px 0 0;
+    }
+
+    .heart {
+      font-size: 3em;
+      margin-top: 10px;
+      cursor: pointer;
+      animation: pulse 1.5s infinite;
+      user-select: none;
+    }
+
+    .note {
+      font-size: 1.2em;
+      margin-top: 50px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* New styles for the decorations and container */
+    .countdown-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+      flex-wrap: nowrap;
+    }
+
+    .decor-gif {
+      width: 150px;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Container for the countdown and birthday label */
+    .countdown-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 300px;
+    }
+  </style>
+
+  <!-- Confetti library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <h1>Countdown to Lea's</h1>
+
+  <div class="countdown-wrapper">
+    <!-- Hugging Milk & Mocha GIF left -->
+    <img
+      src="https://i.imgur.com/BiUFNjk.gif"
+      alt="Milk and Mocha Hugging"
+      class="decor-gif"
+    />
+
+    <div class="countdown-content">
+      <div id="countdown"></div>
+      <div class="birthday-label">Birthday</div>
+      <div class="heart" onclick="triggerLove()">💖</div>
+    </div>
+
+    <!-- Blowing Kiss Milk & Mocha GIF right -->
+    <img
+      src="https://i.imgur.com/gos3UxN.gif"
+      alt="Milk and Mocha Blowing a Kiss"
+      class="decor-gif"
+    />
+  </div>
+
+  <div class="note">SURPRISE INCOMING SOON 💕</div>
+
+  <!-- Happy Birthday Song -->
+  <audio id="birthdaySong" src="https://cdn.pixabay.com/download/audio/2022/08/25/audio_37fa425be4.mp3?filename=happy-birthday-to-you-10488.mp3"></audio>
+
+  <script>
+    // KONAMI CODE
+    const konami = [38,38,40,40,37,39,37,39,66,65];
+    let inputSequence = [];
+
+    window.addEventListener("keydown", e => {
+      inputSequence.push(e.keyCode);
+      if (inputSequence.toString().indexOf(konami) >= 0) {
+        alert("🌸 Pssst... I'm so glad we met. 💘 -Colby");
+        inputSequence = [];
+      }
+      // Limit inputSequence length to konami length to keep memory small
+      if (inputSequence.length > konami.length) inputSequence.shift();
+    });
+
+    // Confetti on heart click
+    function triggerLove() {
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+      alert("💖 Secret message activated! You’re so special, Lea.");
+    }
+
+    // Countdown
+    const countdown = () => {
+      const birthday = new Date("2025-06-26T00:00:00-07:00").getTime(); // CA time (PDT)
+      const now = new Date().getTime();
+      const gap = birthday - now;
+
+      const second = 1000;
+      const minute = second * 60;
+      const hour = minute * 60;
+      const day = hour * 24;
+
+      const d = Math.floor(gap / day);
+      const h = Math.floor((gap % day) / hour);
+      const m = Math.floor((gap % hour) / minute);
+      const s = Math.floor((gap % minute) / second);
+
+      const countdownEl = document.getElementById("countdown");
+
+      if (gap > 0) {
+        countdownEl.innerHTML = `${d}d ${h}h ${m}m ${s}s`;
+      } else {
+        countdownEl.innerHTML = "🎂 IT'S LEA'S BIRTHDAY!!! 🎂";
+        startBirthdayCelebration();
+        clearInterval(timerInterval); // Stop the timer when countdown ends
+      }
+    };
+
+    // Celebration confetti + music
+    function startBirthdayCelebration() {
+      confetti({
+        particleCount: 300,
+        spread: 160,
+        origin: { y: 0.6 }
+      });
+
+      // Burst confetti multiple times for effect
+      let count = 0;
+      const maxBursts = 5;
+      const interval = setInterval(() => {
+        confetti({
+          particleCount: 100,
+          spread: 120,
+          origin: { y: Math.random() * 0.6 + 0.4, x: Math.random() }
+        });
+        count++;
+        if(count >= maxBursts) clearInterval(interval);
+      }, 400);
+
+      // Play birthday song
+      const song = document.getElementById("birthdaySong");
+      song.play();
+    }
+
+    const timerInterval = setInterval(countdown, 1000);
+  </script>
+</body>
+</html>
